@@ -1,12 +1,4 @@
-from flask import Blueprint, jsonify, Response, request
-# from app.services.salesforce.account import (
-#     get_account_info,
-#     get_account_metadatas,
-#     get_contacts,
-#     get_leads,
-#     run_query,
-#     get_account_by_id
-# )
+from flask import Blueprint, jsonify, Response
 from app.services.salesforce.accounts import (
     get_account_info,
     get_account_metadatas,
