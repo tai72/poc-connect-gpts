@@ -5,7 +5,7 @@ from app.services.salesforce.accounts import (
     get_account_by_id
 )
 
-salesforce_bp = Blueprint('salesforce', __name__)
+salesforce_bp = Blueprint('salesforce/account', __name__)
 
 
 @salesforce_bp.route('/accounts', methods=['GET'])
