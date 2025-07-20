@@ -1,7 +1,8 @@
-from flask import Blueprint, jsonify, Response
+from flask import request, Blueprint, jsonify, Response
 from app.services.salesforce.opportunities import (
     get_opportunities,
-    get_opportunity_by_id
+    get_opportunity_by_id,
+    create_opportunity
 )
 
 salesforce_opportunity_bp = Blueprint('salesforce/opportunity', __name__)
@@ -18,7 +19,7 @@ def opportunities():
     return jsonify({'opportunities': accounts})
 
 
-@salesforce_opportunity_bp.route('/detail/<opportunity_id>', methods=['GET'])
+@salesforce_opportunity_bp.route('/<opportunity_id>', methods=['GET'])
 def detail(opportunity_id):
     opportunity = get_opportunity_by_id(opportunity_id)
 
@@ -28,3 +29,22 @@ def detail(opportunity_id):
 
     # 普通にデータだったら、JSONで返す
     return jsonify({'opportunity': opportunity})
+
+
+@salesforce_opportunity_bp.route('/create', methods=['POST'])
+def create():
+    data = request.json  # POSTされたJSON
+    name = data.get('name')
+    stage_name = data.get('stage_name')
+    close_date = data.get('close_date')
+    amount = data.get('amount')
+
+    result = create_opportunity(
+        name=name,
+        stage_name=stage_name,
+        close_date=close_date,
+        amount=amount
+    )
+
+    # Salesforceから正常に返ったものをJSONで返却
+    return jsonify(result)

@@ -1,4 +1,4 @@
-from flask import Blueprint, redirect, request, current_app, jsonify
+from flask import Blueprint, redirect, request, current_app
 import requests
 import secrets
 import hashlib
@@ -41,6 +41,7 @@ def salesforce_login():
     }
     url = current_app.config['SF_AUTH_URL']
     full_url = requests.Request('POST', url, params=params).prepare().url
+    # full_url = requests.Request('GET', url, params=params).prepare().url
 
     print('リダイレクト', full_url)
 
@@ -52,7 +53,9 @@ def oauth_callback():
     code = request.args.get('code')
     code_verifier = session.get('code_verifier')
 
+    print('コールバック')
     print('code', code)
+    print(session)
 
     data = {
         'grant_type': 'authorization_code',

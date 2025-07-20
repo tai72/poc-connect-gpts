@@ -1,13 +1,14 @@
-openapi: 3.0.0
+openapi: 3.1.0
 info:
   title: Salesforce Connector API
   version: "1.0"
 servers:
   - url: https://edd807a86077.ngrok-free.app
 paths:
-  /salesforce/accounts:
+  /salesforce/account/list:
     get:
       summary: Get list of Accounts
+      operationId: getAccounts
       responses:
         '200':
           description: List of account names
@@ -21,9 +22,10 @@ paths:
                     items:
                       type: string
 
-  /salesforce/account/{account_id}:
+  /salesforce/account/detail/{account_id}:
     get:
       summary: Get single Account by ID
+      operationId: getAccountById
       parameters:
         - in: path
           name: account_id
@@ -46,6 +48,7 @@ paths:
   /salesforce/contacts:
     get:
       summary: Get list of Contacts
+      operationId: getContacts
       responses:
         '200':
           description: List of contact names
@@ -62,6 +65,7 @@ paths:
   /salesforce/leads:
     get:
       summary: Get list of Leads
+      operationId: getLeads
       responses:
         '200':
           description: List of lead names
@@ -78,6 +82,7 @@ paths:
   /salesforce/query:
     get:
       summary: Run arbitrary SOQL query
+      operationId: runSoqlQuery
       parameters:
         - in: query
           name: q
@@ -96,3 +101,106 @@ paths:
                     type: array
                     items:
                       type: object
+
+  /salesforce/opportunity/list:
+    get:
+      summary: Get list of Opportunities
+      operationId: listOpportunities
+      responses:
+        '200':
+          description: List of Opportunities
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Opportunity'
+
+  /salesforce/opportunity/{opportunity_id}:
+    get:
+      summary: Get Opportunity by ID
+      operationId: getOpportunityById
+      parameters:
+        - name: opportunity_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Opportunity detail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Opportunity'
+
+  /salesforce/opportunity/create:
+    post:
+      summary: Create new Opportunity
+      operationId: createOpportunity
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOpportunityRequest'
+      responses:
+        '200':
+          description: Opportunity created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateOpportunityResponse'
+
+components:
+  schemas:
+    Opportunity:
+      type: object
+      properties:
+        Id:
+          type: string
+        Name:
+          type: string
+        StageName:
+          type: string
+        CloseDate:
+          type: string
+          format: date
+        Amount:
+          type: number
+          format: double
+      required:
+        - Id
+        - Name
+        - StageName
+        - CloseDate
+
+    CreateOpportunityRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        stage_name:
+          type: string
+        close_date:
+          type: string
+          format: date
+        amount:
+          type: number
+          format: double
+      required:
+        - name
+        - stage_name
+        - close_date
+
+    CreateOpportunityResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        success:
+          type: boolean
+        errors:
+          type: array
+          items:
+            type: string

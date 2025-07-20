@@ -14,6 +14,7 @@ def ensure_salesforce_authenticated(func):
 
         if not access_token or not instance_url:
             print('未認証なので、`oauth.salesforce_login`にリダイレクト')
+            print('request.path', request.path)
             return redirect(url_for('oauth.salesforce_login', next=request.path))
 
         return func(access_token, instance_url, *args, **kwargs)

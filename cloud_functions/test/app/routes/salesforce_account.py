@@ -8,7 +8,7 @@ from app.services.salesforce.accounts import (
 salesforce_bp = Blueprint('salesforce/account', __name__)
 
 
-@salesforce_bp.route('/accounts', methods=['GET'])
+@salesforce_bp.route('/list', methods=['GET'])
 def accounts():
     accounts = get_account_metadatas()
 
@@ -16,11 +16,10 @@ def accounts():
     if isinstance(accounts, Response):
         return accounts
 
-    # 普通にデータだったら、JSONで返す
     return jsonify({'accounts': accounts})
 
 
-@salesforce_bp.route('/account_info', methods=['GET'])
+@salesforce_bp.route('/info', methods=['GET'])
 def account_names():
     accounts = get_account_info()
 
@@ -28,11 +27,10 @@ def account_names():
     if isinstance(accounts, Response):
         return accounts
 
-    # 普通にデータだったら、JSONで返す
     return jsonify({'accounts': accounts})
 
 
-@salesforce_bp.route('/account/<account_id>', methods=['GET'])
+@salesforce_bp.route('/detail/<account_id>', methods=['GET'])
 def account_detail(account_id):
     account = get_account_by_id(account_id)
     if isinstance(account, Response):
