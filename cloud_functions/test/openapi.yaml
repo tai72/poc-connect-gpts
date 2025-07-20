@@ -151,6 +151,27 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CreateOpportunityResponse'
+  
+  /salesforce/opportunity/delete/{opportunity_id}:
+    delete:
+      operationId: deleteOpportunity
+      summary: Delete an Opportunity by ID
+      parameters:
+        - in: path
+          name: opportunity_id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Deletion status
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
 
 components:
   schemas:

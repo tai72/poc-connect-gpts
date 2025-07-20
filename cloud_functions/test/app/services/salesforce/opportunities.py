@@ -48,3 +48,25 @@ def create_opportunity(access_token, instance_url, name, stage_name, close_date,
     response.raise_for_status()
 
     return response.json()
+
+
+@ensure_salesforce_authenticated
+def delete_opportunity(access_token, instance_url, opportunity_id):
+    print(f'delete opportunity: {opportunity_id}')
+
+    url = f"{instance_url}/services/data/v64.0/sobjects/Opportunity/{opportunity_id}"
+    headers = {'Authorization': f'Bearer {access_token}'}
+
+    response = requests.delete(url, headers=headers)
+
+    print(f'status code: {response.status_code}')
+
+    if response.status_code == 404:
+        return {
+            "message": "target opportunity maybe not exists.",
+            "status_code": response.status_code
+        }
+
+    response.raise_for_status()
+
+    return {"message": f"Successfully delete opportunity: {opportunity_id}", "status_code": response.status_code}

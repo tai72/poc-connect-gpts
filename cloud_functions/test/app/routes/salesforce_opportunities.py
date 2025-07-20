@@ -2,7 +2,8 @@ from flask import request, Blueprint, jsonify, Response
 from app.services.salesforce.opportunities import (
     get_opportunities,
     get_opportunity_by_id,
-    create_opportunity
+    create_opportunity,
+    delete_opportunity
 )
 
 salesforce_opportunity_bp = Blueprint('salesforce/opportunity', __name__)
@@ -47,4 +48,12 @@ def create():
     )
 
     # Salesforceから正常に返ったものをJSONで返却
+    return jsonify(result)
+
+
+@salesforce_opportunity_bp.route('/delete/<opportunity_id>', methods=['DELETE'])
+def delete_opportunity_route(opportunity_id):
+    result = delete_opportunity(opportunity_id)
+    if isinstance(result, Response):
+        return result
     return jsonify(result)
